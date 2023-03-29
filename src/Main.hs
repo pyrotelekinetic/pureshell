@@ -7,6 +7,7 @@ main = do
   eval l
 
 eval :: String -> IO ()
+eval [] = main
 eval "exit" = exitSuccess
 eval ('c' : 'd' : ' ' : dir) = do
   setCurrentDirectory dir
