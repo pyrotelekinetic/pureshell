@@ -1,6 +1,7 @@
 import System.Process (proc, createProcess)
 import System.Exit (exitSuccess)
 import System.Directory (setCurrentDirectory)
+import Control.Exception (try, IOException)
 
 main = do
   l <- getLine
@@ -14,5 +15,12 @@ eval ('c' : 'd' : ' ' : dir) = do
   main
 eval x = do
   let (c : as) = words x
-  createProcess $ proc c as
-  main
+  a <- try' . createProcess $ proc c as
+  case a of
+    Left e -> do
+      print e
+      main
+    Right r -> main
+  where
+    try' :: IO a -> IO (Either IOException a)
+    try' = try
